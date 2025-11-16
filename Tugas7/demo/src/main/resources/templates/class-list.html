@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Class List</title>
+</head>
+<body>
+    <h1>Class List</h1>
+    <div th:if="${success}" style="color: green;" th:text="${success}"></div>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Capacity</th>
+                <th>Registered</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="cls : ${classes}">
+                <td th:text="${cls.code}"></td>
+                <td th:text="${cls.name}"></td>
+                <td th:text="${cls.maxCapacity}"></td>
+                <td th:text="${#lists.size(cls.registeredParticipants)}"></td> <!-- Assuming we add registeredParticipants, but for now, we'll calculate -->
+                <td>
+                    <a th:href="@{/class/detail/{code}(code=${cls.code})}">Details</a>
+                    <a th:href="@{/participants/register/{code}(code=${cls.code})}">Register</a>
+                    <form th:action="@{/class/delete/{code}(code=${cls.code})}" method="post" style="display:inline;">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="/">Back to Home</a>
+</body>
+</html>

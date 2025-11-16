@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Participants per Class</title>
+</head>
+<body>
+    <h1>View Participants per Class</h1>
+    <ul>
+        <li th:each="cls : ${classes}">
+            <a th:href="@{/class/detail/{code}(code=${cls.code})}" th:text="${cls.name} + ' (' + ${cls.code} + ')'"></a>
+        </li>
+    </ul>
+    <a href="/">Back to Home</a>
+</body>
+</html>
