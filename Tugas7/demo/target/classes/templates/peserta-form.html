@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Pendaftaran Peserta - KelasKu</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 600px;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            color: #4c51bf;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .class-info {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .class-info h5 {
+            color: #4c51bf;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>✍️ Pendaftaran Peserta</h2>
+
+    <div class="class-info">
+        <h5 th:text="${kelas.namaKelas}"></h5>
+        <p class="mb-1"><strong>Kode:</strong> <span th:text="${kelas.kodeKelas}"></span></p>
+        <p class="mb-0"><strong>Harga:</strong> <span th:text="'Rp ' + ${#numbers.formatDecimal(kelas.harga, 0, 'COMMA', 0, 'POINT')}"></span></p>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <form th:action="@{/peserta/save}" method="post" th:object="${peserta}">
+        <input type="hidden" name="kodeKelas" th:value="${kelas.kodeKelas}">
+
+        <div class="mb-3">
+            <label for="nama" class="form-label">Nama Lengkap *</label>
+            <input type="text" class="form-control" id="nama" 
+                   th:field="*{nama}" placeholder="Masukkan nama lengkap" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email *</label>
+            <input type="email" class="form-control" id="email" 
+                   th:field="*{email}" placeholder="contoh@email.com" required>
+            <small class="form-text text-muted">Email harus mengandung karakter @</small>
+        </div>
+
+        <div class="mb-3">
+            <label for="nomorHP" class="form-label">Nomor HP *</label>
+            <input type="text" class="form-control" id="nomorHP" 
+                   th:field="*{nomorHP}" placeholder="08xxxxxxxxxx" required>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a th:href="@{/class/detail/{kode}(kode=${kelas.kodeKelas})}" class="btn btn-secondary">Batal</a>
+            <button type="submit" class="btn btn-success">Daftar Sekarang</button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

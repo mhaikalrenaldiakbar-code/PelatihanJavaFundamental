@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Daftar Kelas - KelasKu</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            color: #4c51bf;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            border: none;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            border: none;
+        }
+
+        .alert {
+            border-radius: 8px;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        .badge {
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📚 Daftar Kelas</h2>
+        <div>
+            <a th:href="@{/class/add}" class="btn btn-primary">➕ Tambah Kelas</a>
+            <a th:href="@{/}" class="btn btn-secondary">🏠 Home</a>
+        </div>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${listKelas.isEmpty()}" class="alert alert-info">
+        Belum ada kelas yang tersedia. Silakan tambahkan kelas baru.
+    </div>
+
+    <table th:if="${!listKelas.isEmpty()}" class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Kode</th>
+                <th>Nama Kelas</th>
+                <th>Kapasitas</th>
+                <th>Peserta Terdaftar</th>
+                <th>Harga</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="kelas : ${listKelas}">
+                <td th:text="${kelas.kodeKelas}"></td>
+                <td th:text="${kelas.namaKelas}"></td>
+                <td th:text="${kelas.kapasitasMaksimal}"></td>
+                <td>
+                    <span th:text="${pesertaService.getRegisteredCount(kelas.kodeKelas)}"></span> / 
+                    <span th:text="${kelas.kapasitasMaksimal}"></span>
+                    <span th:if="${pesertaService.isQuotaFull(kelas.kodeKelas, kelas.kapasitasMaksimal)}" 
+                          class="badge bg-danger ms-2">PENUH</span>
+                </td>
+                <td th:text="'Rp ' + ${#numbers.formatDecimal(kelas.harga, 0, 'COMMA', 0, 'POINT')}"></td>
+                <td>
+                    <a th:href="@{/class/detail/{kode}(kode=${kelas.kodeKelas})}" 
+                       class="btn btn-info btn-sm">Detail</a>
+                    <a th:href="@{/peserta/register/{kode}(kode=${kelas.kodeKelas})}" 
+                       class="btn btn-success btn-sm"
+                       th:classappend="${pesertaService.isQuotaFull(kelas.kodeKelas, kelas.kapasitasMaksimal)} ? 'disabled' : ''">
+                       Daftar
+                    </a>
+                    <form th:action="@{/class/delete/{kode}(kode=${kelas.kodeKelas})}" 
+                          method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" 
+                                onclick="return confirm('Yakin ingin menghapus kelas ini?')">
+                            Hapus
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

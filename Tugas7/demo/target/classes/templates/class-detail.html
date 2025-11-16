@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Detail Kelas - KelasKu</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            color: #4c51bf;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .info-card {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .info-value {
+            color: #2d3748;
+            font-size: 18px;
+        }
+
+        .badge {
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            border: none;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📖 Detail Kelas</h2>
+        <a th:href="@{/class}" class="btn btn-secondary">← Kembali</a>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="info-card">
+        <div class="row mb-3">
+            <div class="col-md-3 info-label">Kode Kelas:</div>
+            <div class="col-md-9 info-value" th:text="${kelas.kodeKelas}"></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-3 info-label">Nama Kelas:</div>
+            <div class="col-md-9 info-value" th:text="${kelas.namaKelas}"></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-3 info-label">Deskripsi:</div>
+            <div class="col-md-9 info-value" th:text="${kelas.deskripsi}"></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-3 info-label">Harga:</div>
+            <div class="col-md-9 info-value" th:text="'Rp ' + ${#numbers.formatDecimal(kelas.harga, 0, 'COMMA', 0, 'POINT')}"></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-3 info-label">Kapasitas:</div>
+            <div class="col-md-9 info-value">
+                <span th:text="${jumlahPeserta}"></span> / <span th:text="${kelas.kapasitasMaksimal}"></span>
+                <span th:if="${jumlahPeserta >= kelas.kapasitasMaksimal}" class="badge bg-danger ms-2">PENUH</span>
+                <span th:if="${jumlahPeserta < kelas.kapasitasMaksimal}" class="badge bg-success ms-2">TERSEDIA</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>👥 Daftar Peserta (<span th:text="${jumlahPeserta}"></span>)</h4>
+        <a th:href="@{/peserta/register/{kode}(kode=${kelas.kodeKelas})}" 
+           class="btn btn-success"
+           th:classappend="${jumlahPeserta >= kelas.kapasitasMaksimal} ? 'disabled' : ''">
+           ➕ Daftar Peserta Baru
+        </a>
+    </div>
+
+    <div th:if="${pesertaList.isEmpty()}" class="alert alert-info">
+        Belum ada peserta yang terdaftar di kelas ini.
+    </div>
+
+    <table th:if="${!pesertaList.isEmpty()}" class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Email</th>
+                <th>Nomor HP</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="peserta, iterStat : ${pesertaList}">
+                <td th:text="${iterStat.count}"></td>
+                <td th:text="${peserta.nama}"></td>
+                <td th:text="${peserta.email}"></td>
+                <td th:text="${peserta.nomorHP}"></td>
+                <td>
+                    <form th:action="@{/peserta/delete/{kode}/{email}(kode=${kelas.kodeKelas}, email=${peserta.email})}" 
+                          method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" 
+                                onclick="return confirm('Yakin ingin membatalkan pendaftaran?')">
+                            Batalkan
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
