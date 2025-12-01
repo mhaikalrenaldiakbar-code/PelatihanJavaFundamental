@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Form Data Obat</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(140deg, #a9dac8, #bef5de, #caebfa);
+            min-height: 100vh;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        body::before, body::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+        }
+
+        body::before {
+            top: -90px;
+            left: -110px;
+            width: 380px;
+            height: 380px;
+            background: rgba(27, 156, 133, 0.18);
+        }
+
+        body::after {
+            bottom: -120px;
+            right: -120px;
+            width: 430px;
+            height: 430px;
+            background: rgba(34, 139, 230, 0.18);
+        }
+
+        .card-glass {
+            backdrop-filter: blur(14px);
+            background: rgba(255, 255, 255, 0.78);
+            border-radius: 15px;
+            padding: 20px;
+            width: 430px;
+            box-shadow: 0px 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .card-header {
+            background: #1b9c85;
+            border-radius: 10px 10px 0 0;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        label {
+            font-weight: 500;
+            color: #0a6b56;
+        }
+
+        .btn-success {
+            background:#1b9c85;
+            border:none;
+        }
+        .btn-success:hover {
+            background:#15846f;
+        }
+
+        .btn-secondary:hover {
+            opacity: .85;
+        }
+
+        .title-top {
+            font-weight:700;
+            color:#0a6b56;
+            text-align:center;
+            margin-bottom:10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card-glass">
+
+    <h4 class="title-top">
+        <i class="fa-solid fa-prescription-bottle-medical"></i>
+        <span th:text="${obat.kodeObat == null ? 'Tambah Obat Baru' : 'Edit Data Obat'}"></span>
+    </h4>
+
+    <form th:action="@{/obat/save}" method="post" th:object="${obat}">
+
+        <div class="mb-2">
+            <label>Kode Obat</label>
+            <input type="text" class="form-control" th:field="*{kodeObat}"
+                   th:readonly="${obat.kodeObat != null}">
+        </div>
+
+        <div class="mb-2">
+            <label>Nama Obat</label>
+            <input type="text" class="form-control" th:field="*{namaObat}">
+        </div>
+
+        <div class="mb-2">
+            <label>Kategori</label>
+            <input type="text" class="form-control" th:field="*{kategori}">
+        </div>
+
+        <div class="mb-2">
+            <label>Stok</label>
+            <input type="number" class="form-control" th:field="*{stok}">
+        </div>
+
+        <div class="mb-2">
+            <label>Harga</label>
+            <input type="number" class="form-control" th:field="*{harga}">
+        </div>
+
+         <div class="mb-2">
+            <label>Deskripsi</label>
+            <textarea class="form-control" rows="2" th:field="*{deskripsi}"></textarea>
+        </div>
+
+        <div class="mb-2">
+            <label>Nama Supplier</label>
+            <input type="text" class="form-control" th:field="*{namaSupplier}">
+        </div>
+
+        <div class="mb-3">
+            <label>Nomor Supplier</label>
+            <input type="text" class="form-control" th:field="*{noSupplier}">
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a th:href="@{/obat/list}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i> Kembali
+            </a>
+            <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Simpan
+            </button>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
