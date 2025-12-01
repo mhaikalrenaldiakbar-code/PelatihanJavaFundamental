@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Produk - Product Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <i class="fas fa-boxes"></i>
+                    <span>Product Manager</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/products" class="nav-link active"><i class="fas fa-list"></i> Products</a></li>
+                    <li><a href="/products/add" class="nav-link"><i class="fas fa-plus-circle"></i> Add Product</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="container">
+            <!-- Notifications -->
+            <div th:replace="~{fragments/notifications :: notifications}"></div>
+
+                <!-- <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="stat-value" th:text="${totalProducts != null} ? ${totalProducts} : 0">0</div>
+                    <div class="stat-label">Total Produk</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-value" th:text="${inStockProducts != null} ? ${inStockProducts} : 0">0</div>
+                    <div class="stat-label">Stok Tersedia</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-value" th:text="${lowStockProducts != null} ? ${lowStockProducts} : 0">0</div>
+                    <div class="stat-label">Stok Rendah</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon danger">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stat-value" th:text="${outOfStockProducts != null} ? ${outOfStockProducts} : 0">0</div>
+                    <div class="stat-label">Stok Habis</div>
+                </div> -->
+            </div>
+
+            <!-- Action Bar -->
+            <div class="card mb-4">
+                <div class="d-flex justify-between align-center flex-wrap">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Cari produk..."
+                            th:value="${keyword != null} ? ${keyword} : ''"
+                            onkeypress="if(event.keyCode==13) searchProducts()" id="searchInput">
+                    </div>
+                    <div class="btn-group">
+                        <a th:href="@{/products/add}" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Tambah Produk
+                        </a>
+                        <button class="btn btn-outline" onclick="refreshPage()">
+                            <i class="fas fa-redo"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Table -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-table"></i> Daftar Produk
+        </h3>
+    </div>
+
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="sortable" onclick="sortTable('id')">ID <i class="fas fa-sort"></i></th>
+                    <th class="sortable" onclick="sortTable('name')">Nama Produk <i class="fas fa-sort"></i></th>
+                    <th class="sortable" onclick="sortTable('price')">Harga <i class="fas fa-sort"></i></th>
+                    <th class="sortable" onclick="sortTable('stock')">Stok <i class="fas fa-sort"></i></th>
+                    <th>Kategori</th>
+                    <th>Tanggal Dibuat</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.id}">1</td>
+
+                    <td>
+                        <strong th:text="${product.name}">Product Name</strong>
+                    </td>
+
+                    <td>
+                        <span class="badge badge-primary">
+                            Rp <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">0</span>
+                        </span>
+                    </td>
+
+                    <td>
+                        <span th:class="${
+                            product.stock == 0 ? 'badge badge-danger' :
+                            (product.stock < 10 ? 'badge badge-warning' : 'badge badge-success')
+                        }">
+                            <span th:text="${product.stock}">0</span> unit
+                        </span>
+                    </td>
+
+                    <td th:text="${product.createdAt != null 
+                        ? #temporals.format(product.createdAt, 'dd/MM/yyyy HH:mm') 
+                        : ''}">
+                    </td>
+
+                    <td>
+                        <div class="btn-group">
+                            <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a th:href="@{/products/delete/{id}(id=${product.id})}"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Yakin ingin menghapus produk ini?')">
+                                <i class="fas fa-trash"></i> Hapus
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Jika kosong -->
+                <tr th:if="${products == null or products.empty}">
+                    <td colspan="7" class="text-center py-5">
+                        <div class="empty-state">
+                            <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                            <h4>Tidak ada produk ditemukan</h4>
+                            <p class="text-muted">Mulai dengan menambahkan produk pertama Anda</p>
+                            <a th:href="@{/products/add}" class="btn btn-primary mt-3">
+                                <i class="fas fa-plus"></i> Tambah Produk
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Pagination -->
+    <div th:if="${totalPages != null and totalPages > 1}" class="pagination mt-4">
+
+        <!-- First -->
+        <li th:class="${currentPage == 0 ? 'page-item disabled' : 'page-item'}">
+            <a class="page-link" th:href="@{/products(page=0, keyword=${keyword})}">
+                <i class="fas fa-angle-double-left"></i>
+            </a>
+        </li>
+
+        <!-- Prev -->
+        <li th:class="${currentPage == 0 ? 'page-item disabled' : 'page-item'}">
+            <a class="page-link" th:href="@{/products(page=${currentPage - 1}, keyword=${keyword})}">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+        </li>
+
+        <!-- Page Numbers -->
+        <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+            th:class="${i == currentPage + 1 ? 'page-item active' : 'page-item'}">
+            <a class="page-link"
+               th:href="@{/products(page=${i - 1}, keyword=${keyword})}"
+               th:text="${i}">
+            </a>
+        </li>
+
+        <!-- Next -->
+        <li th:class="${currentPage == totalPages - 1 ? 'page-item disabled' : 'page-item'}">
+            <a class="page-link" th:href="@{/products(page=${currentPage + 1}, keyword=${keyword})}">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </li>
+
+        <!-- Last -->
+        <li th:class="${currentPage == totalPages - 1 ? 'page-item disabled' : 'page-item'}">
+            <a class="page-link" th:href="@{/products(page=${totalPages - 1}, keyword=${keyword})}">
+                <i class="fas fa-angle-double-right"></i>
+            </a>
+        </li>
+
+    </div>
+</div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-boxes"></i>
+                    <span>Product Management System</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">About</a>
+                    <a href="#" class="footer-link">Contact</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Terms</a>
+                </div>
+            </div>
+            <div class="footer-copy">
+                &copy; 2024 Product Management. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function searchProducts() {
+            const keyword = document.getElementById('searchInput').value;
+            window.location.href = `/products?keyword=${encodeURIComponent(keyword)}`;
+        }
+
+        function sortTable(column) {
+            const url = new URL(window.location.href);
+            const currentSort = url.searchParams.get('sort') || 'id';
+            const currentOrder = url.searchParams.get('order') || 'asc';
+
+            let newOrder = 'asc';
+            if (currentSort === column && currentOrder === 'asc') {
+                newOrder = 'desc';
+            }
+
+            url.searchParams.set('sort', column);
+            url.searchParams.set('order', newOrder);
+            window.location.href = url.toString();
+        }
+
+        function refreshPage() {
+            window.location.reload();
+        }
+    </script>
+</body>
+
+</html>

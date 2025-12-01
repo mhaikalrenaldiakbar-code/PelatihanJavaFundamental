@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Produk - Product Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <i class="fas fa-boxes"></i>
+                    <span>Product Manager</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/products" class="nav-link"><i class="fas fa-list"></i> Products</a></li>
+                    <li><a href="/products/add" class="nav-link"><i class="fas fa-plus-circle"></i> Add Product</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title">
+                    <i class="fas fa-edit"></i>
+                    <h1>Edit Produk</h1>
+                </div>
+                <p class="page-subtitle">
+                    Perbarui informasi produk di bawah ini.
+                </p>
+            </div>
+
+            <!-- Notifications -->
+            <div th:replace="fragments/notifications :: notifications"></div>
+
+            <!-- Product Info -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-info-circle"></i> Informasi Produk
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="product-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">ID Produk:</span>
+                            <span class="info-value" th:text="${product.id}">#</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Tanggal Dibuat:</span>
+                            <span class="info-value"
+                                th:text="${#temporals.format(product.createdAt, 'dd/MM/yyyy HH:mm:ss')}">
+                                dd/MM/yyyy HH:mm:ss
+                            </span>
+                        </div>
+                        <!-- <div class="info-item">
+                            <span class="info-label">Terakhir Diupdate:</span>
+                            <span class="info-value"
+                                th:text="${#temporals.format(product.updatedAt, 'dd/MM/yyyy HH:mm:ss')}">
+                                dd/MM/yyyy HH:mm:ss
+                            </span>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Container -->
+            <div class="form-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-edit"></i> Form Edit Produk
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/products/edit}" th:object="${product}" method="post">
+                            <!-- Hidden ID -->
+                            <input type="hidden" th:field="*{id}">
+
+                            <!-- Nama Produk -->
+                            <div class="form-group">
+                                <label for="name" class="form-label">
+                                    <i class="fas fa-tag"></i> Nama Produk
+                                </label>
+                                <input type="text" class="form-control" id="name" th:field="*{name}"
+                                    placeholder="Masukkan nama produk" required>
+                                <div class="form-text">
+                                    Nama produk harus 3-100 karakter
+                                </div>
+                                <div th:if="${#fields.hasErrors('name')}" class="text-danger mt-1">
+                                    <small th:errors="*{name}"></small>
+                                </div>
+                            </div>
+
+                            <!-- Harga -->
+                            <div class="form-group">
+                                <label for="price" class="form-label">
+                                    <i class="fas fa-money-bill-wave"></i> Harga
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="number" class="form-control" id="price" th:field="*{price}"
+                                        placeholder="Masukkan harga" min="1" step="0.01" required>
+                                </div>
+                                <div class="form-text">
+                                    Harga harus lebih dari 0
+                                </div>
+                                <div th:if="${#fields.hasErrors('price')}" class="text-danger mt-1">
+                                    <small th:errors="*{price}"></small>
+                                </div>
+                            </div>
+
+                            <!-- Stok -->
+                            <div class="form-group">
+                                <label for="stock" class="form-label">
+                                    <i class="fas fa-boxes"></i> Stok
+                                </label>
+                                <input type="number" class="form-control" id="stock" th:field="*{stock}"
+                                    placeholder="Masukkan jumlah stok" min="0" required>
+                                <div class="form-text">
+                                    Stok tidak boleh negatif
+                                </div>
+                                <div th:if="${#fields.hasErrors('stock')}" class="text-danger mt-1">
+                                    <small th:errors="*{stock}"></small>
+                                </div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="form-group mt-4">
+                                <div class="btn-group w-100">
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="fas fa-save"></i> Update Produk
+                                    </button>
+                                    <a th:href="@{/products}" class="btn btn-outline btn-lg">
+                                        <i class="fas fa-times"></i> Batal
+                                    </a>
+                                    <a th:href="@{/products/delete/{id}(id=${product.id})}"
+                                        class="btn btn-danger btn-lg"
+                                        onclick="return confirm('Yakin ingin menghapus produk ini?')">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-boxes"></i>
+                    <span>Product Management System</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">About</a>
+                    <a href="#" class="footer-link">Contact</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Terms</a>
+                </div>
+            </div>
+            <div class="footer-copy">
+                &copy; 2024 Product Management. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        /* Additional styles for edit page */
+        .product-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #1e293b;
+            font-weight: 600;
+            padding: 8px 12px;
+            background: #f8fafc;
+            border-radius: 6px;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .input-group {
+            display: flex;
+        }
+
+        .input-group-text {
+            background: #e2e8f0;
+            border: 2px solid #e2e8f0;
+            border-right: none;
+            padding: 14px 15px;
+            border-radius: 8px 0 0 8px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .input-group .form-control {
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</body>
+
+</html>
