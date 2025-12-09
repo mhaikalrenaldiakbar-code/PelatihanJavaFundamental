@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Daftar Kelas</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <h2>Manajemen Kelas Dan Mahasiswa 📚</h2>
+    <p><a th:href="@{/students}">Lihat Daftar Seluruh Mahasiswa</a></p>
+    <p><a th:href="@{/classes/add}">+ Tambah Kelas Baru</a></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama Kelas</th>
+                <th>Total Mahasiswa</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="aClass, iterStat : ${classes}">
+                <td th:text="${iterStat.count}">1</td>
+                <td>
+                    <a th:href="@{/classes/{id}(id=${aClass.id})}" th:text="${aClass.name}">Nama Kelas</a>
+                </td>
+                <td th:text="${aClass.students != null ? aClass.students.size() : 0}">0</td>
+                <td>
+                    <a th:href="@{/classes/edit/{id}(id=${aClass.id})}">Edit</a> |
+                    <a th:href="@{/classes/delete/{id}(id=${aClass.id})}"
+                        onclick="return confirm('Menghapus kelas ini akan menghapus semua mahasiswa terkait. Yakin?');">Hapus</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p th:if="${classes.isEmpty()}">Belum ada data kelas.</p>
+</body>
+
+</html>

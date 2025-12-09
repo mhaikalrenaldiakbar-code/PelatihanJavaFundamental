@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Tambah Mahasiswa</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <h2>Form Tambah Mahasiswa</h2>
+    <form th:action="@{/students/add}" th:object="${student}" method="post">
+        <div>
+            <label for="name">Nama Mahasiswa:</label>
+            <input type="text" id="name" th:field="*{name}">
+            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" id="email" th:field="*{email}">
+            <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
+        <div>
+            <label for="aClass">Pilih Kelas:</label>
+            <select id="aClass" th:field="*{aClass}">
+                <option value="">-- Wajib Pilih Kelas --</option>
+                <option th:each="classItem : ${classes}" th:value="${classItem.id}" th:text="${classItem.name}">Nama
+                    Kelas
+                </option>
+            </select>
+            <span class="error" th:if="${#fields.hasErrors('aClass')}" th:errors="*{aClass}"></span>
+        </div>
+        <button type="submit">Simpan Mahasiswa</button>
+        <a th:href="@{/students}">Batal</a>
+    </form>
+</body>
+
+</html>
