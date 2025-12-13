@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Update Akun</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5 col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark text-center">
+                <h2>Update Akun Pengguna</h2>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/update-akun/{id}(id=${login.id})}" th:object="${login}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" th:field="*{username}" class="form-control" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" th:field="*{password}" class="form-control"
+                            placeholder="Masukkan password baru" />
+                        <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah password.</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning">Update Akun</button>
+                    <a th:href="@{/home}" class="btn btn-secondary">Batal</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

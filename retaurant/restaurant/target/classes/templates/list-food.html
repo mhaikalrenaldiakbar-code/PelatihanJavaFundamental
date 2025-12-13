@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Daftar Makanan</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Daftar Makanan 🍔</h2>
+
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-4">
+                <form action="#" th:action="@{/search}" method="get" class="form-inline">
+                    <input type="text" placeholder="Cari berdasarkan nama..." name="name"
+                        class="form-control mr-sm-2" />
+                    <button type="submit" class="btn btn-outline-success">Cari</button>
+                </form>
+            </div>
+            <div class="col-md-8 text-right">
+                <label class="mr-2">Urutkan Harga:</label>
+                <a th:href="@{/sort-by-price-asc}" class="btn btn-sm btn-info">Termurah</a>
+                <a th:href="@{/sort-by-price-desc}" class="btn btn-sm btn-info">Termahal</a>
+                <a href="/add-food" class="btn btn-success ml-3">Tambah Makanan</a>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Harga</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="a : ${food}">
+                    <td th:text="${a.id}"></td>
+                    <td th:text="${a.name}"></td>
+                    <td th:text="${#numbers.formatCurrency(a.price)}"></td>
+                    <td>
+                        <a th:href="@{'/update-food/' + ${a.id}}" class="btn btn-warning btn-sm">Edit</a>
+                        <a th:href="@{'/delete-food/' + ${a.id}}" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus makanan ini?');">Hapus</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/home}" class="btn btn-secondary">Kembali ke Home</a>
+    </div>
+</body>
+
+</html>

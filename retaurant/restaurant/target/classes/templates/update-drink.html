@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Edit Minuman</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5 col-md-6">
+        <h2 class="mb-4">Edit Minuman</h2>
+        <form th:action="@{/update-drink/{id}(id=${drink.id})}" th:object="${drink}" method="post">
+
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-group">
+                <label for="name">Nama Minuman:</label>
+                <input type="text" id="name" th:field="*{name}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="price">Harga:</label>
+                <input type="number" id="price" th:field="*{price}" class="form-control" required />
+            </div>
+
+            <button type="submit" class="btn btn-warning">Update Minuman</button>
+            <a th:href="@{/list-drink}" class="btn btn-secondary">Batal</a>
+        </form>
+    </div>
+</body>
+
+</html>

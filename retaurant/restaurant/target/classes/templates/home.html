@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Home - Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">RESTAURANT APP</a>
+        <div class="collapse navbar-collapse justify-content-end">
+            <a th:href="@{/login}" class="btn btn-outline-danger">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="mb-4">Selamat Datang! 👋</h2>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-info mb-3 shadow">
+                    <div class="card-header">Manajemen Makanan</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Kelola Menu Makanan</h5>
+                        <p class="card-text">Tambah, lihat, dan kelola daftar menu makanan.</p>
+                        <a th:href="@{/list-food}" class="btn btn-light">Lihat Makanan</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3 shadow">
+                    <div class="card-header">Manajemen Minuman</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Kelola Menu Minuman</h5>
+                        <p class="card-text">Tambah, lihat, dan kelola daftar menu minuman.</p>
+                        <a th:href="@{/list-drink}" class="btn btn-light">Lihat Minuman</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3 shadow">
+                    <div class="card-header">Manajemen Chef</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Kelola Data Chef</h5>
+                        <p class="card-text">Tambah, lihat, dan kelola daftar chef dan spesialisasinya.</p>
+                        <a th:href="@{/list-chef}" class="btn btn-light">Lihat Chef</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="mt-5 mb-3">Daftar Akun Pengguna</h3>
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${login}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td>
+                        <a th:href="@{'/update-akun/' + ${user.id}}" class="btn btn-warning btn-sm">Update</a>
+                        <a th:href="@{'/delete-akun/' + ${user.id}}" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus akun ini?');">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Registrasi Akun</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5 col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>Registrasi Akun Baru</h2>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/save-regis}" th:object="${regis}" method="post">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" th:field="*{username}" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" th:field="*{password}" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">Daftar</button>
+                    <a th:href="@{/login}" class="btn btn-secondary btn-block mt-2">Kembali ke Login</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

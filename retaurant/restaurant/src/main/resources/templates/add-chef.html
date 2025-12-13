@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Tambah Chef</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5 col-md-6">
+        <h2 class="mb-4">Tambah Chef Baru 👨‍🍳</h2>
+        <form th:action="@{/save-chef}" th:object="${chef}" method="post">
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-group">
+                <label for="name">Nama Chef:</label>
+                <input type="text" id="name" th:field="*{name}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="asal">Asal (Kota/Negara):</label>
+                <input type="text" id="asal" th:field="*{asal}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="food">Spesialisasi Makanan:</label>
+                <select id="food" th:field="*{food}" class="form-control">
+                    <option value="">-- Pilih Makanan (Opsional) --</option>
+                    <option th:each="food : ${foodList}" th:value="${food.id}" th:text="${food.name}"></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="drink">Spesialisasi Minuman:</label>
+                <select id="drink" th:field="*{drink}" class="form-control">
+                    <option value="">-- Pilih Minuman (Opsional) --</option>
+                    <option th:each="drink : ${drinkList}" th:value="${drink.id}" th:text="${drink.name}"></option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Simpan Chef</button>
+            <a th:href="@{/list-chef}" class="btn btn-secondary">Batal</a>
+        </form>
+    </div>
+</body>
+
+</html>

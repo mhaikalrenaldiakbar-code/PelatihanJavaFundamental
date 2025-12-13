@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Daftar Chef</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Daftar Chef 🧑‍🍳</h2>
+
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-4">
+                <form action="#" th:action="@{/search-chef}" method="get" class="form-inline">
+                    <input type="text" placeholder="Cari Chef berdasarkan nama..." name="name"
+                        class="form-control mr-sm-2" />
+                    <button type="submit" class="btn btn-outline-success">Cari</button>
+                </form>
+            </div>
+            <div class="col-md-8 text-right">
+                <a href="/add-chef" class="btn btn-success ml-3">Tambah Chef</a>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Chef</th>
+                    <th>Asal</th>
+                    <th>Spesialisasi Makanan</th>
+                    <th>Spesialisasi Minuman</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="chef : ${chefs}">
+                    <td th:text="${chef.id}"></td>
+                    <td th:text="${chef.name}"></td>
+                    <td th:text="${chef.asal}"></td>
+                    <td th:text="${chef.food != null ? chef.food.name : '-'}"></td>
+                    <td th:text="${chef.drink != null ? chef.drink.name : '-'}"></td>
+                    <td>
+                        <a th:href="@{'/update-chef/' + ${chef.id}}" class="btn btn-warning btn-sm">Edit</a>
+                        <a th:href="@{'/delete-chef/' + ${chef.id}}" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus chef ini?');">Hapus</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/home}" class="btn btn-secondary">Kembali ke Home</a>
+    </div>
+</body>
+
+</html>

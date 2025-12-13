@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Edit Chef</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5 col-md-6">
+        <h2 class="mb-4">Edit Data Chef 👨‍🍳</h2>
+        <form th:action="@{/update-chef/{id}(id=${chef.id})}" th:object="${chef}" method="post">
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-group">
+                <label for="name">Nama Chef:</label>
+                <input type="text" id="name" th:field="*{name}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="asal">Asal (Kota/Negara):</label>
+                <input type="text" id="asal" th:field="*{asal}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="food">Spesialisasi Makanan:</label>
+                <select id="food" th:field="*{food}" class="form-control">
+                    <option value="">-- Pilih Makanan (Kosongkan jika tidak ada) --</option>
+                    <option th:each="foodItem : ${foodList}" th:value="${foodItem.id}" th:text="${foodItem.name}"
+                        th:selected="${chef.food != null and chef.food.id == foodItem.id}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="drink">Spesialisasi Minuman:</label>
+                <select id="drink" th:field="*{drink}" class="form-control">
+                    <option value="">-- Pilih Minuman (Kosongkan jika tidak ada) --</option>
+                    <option th:each="drinkItem : ${drinkList}" th:value="${drinkItem.id}" th:text="${drinkItem.name}"
+                        th:selected="${chef.drink != null and chef.drink.id == drinkItem.id}">
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-warning">Update Chef</button>
+            <a th:href="@{/list-chef}" class="btn btn-secondary">Batal</a>
+        </form>
+    </div>
+</body>
+
+</html>
